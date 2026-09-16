@@ -1,0 +1,37 @@
+@startuml AddTask
+
+actor User
+participant Browser
+participant TodoManager
+participant localStorage
+participant DOM
+
+User -> Browser : click Add Task
+activate Browser
+
+Browser -> TodoManager : addTask(input.value, "simple")
+activate TodoManager
+
+TodoManager -> TodoManager : trim and validate description
+TodoManager -> TodoManager : create task and add to tasks
+
+TodoManager -> TodoManager : saveTasks()
+TodoManager -> localStorage : setItem("todo-tasks", tasks)
+activate localStorage
+localStorage --> TodoManager : saved
+deactivate localStorage
+
+TodoManager -> TodoManager : render(task.id)
+TodoManager -> DOM : update task list
+activate DOM
+DOM --> TodoManager : rendered
+deactivate DOM
+
+TodoManager --> Browser : true
+deactivate TodoManager
+
+Browser -> Browser : clear input
+Browser --> User : updated list visible
+deactivate Browser
+
+@enduml
